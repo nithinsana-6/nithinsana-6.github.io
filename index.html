@@ -129,20 +129,39 @@
   color-scheme:light;
 }
 
+/* Background tone, grid, and glow tokens (theme-aware, defined after base palette) */
+:root{ --paper-2:#E6ECF3; --grid-line:rgba(16,30,51,0.045); --glow:rgba(194,102,28,0.07); }
+@media (prefers-color-scheme:dark){
+  :root{ --paper-2:#0E1B30; --grid-line:rgba(150,175,205,0.055); --glow:rgba(232,150,60,0.06); }
+}
+:root[data-theme="dark"]{ --paper-2:#0E1B30; --grid-line:rgba(150,175,205,0.055); --glow:rgba(232,150,60,0.06); }
+:root[data-theme="light"]{ --paper-2:#E6ECF3; --grid-line:rgba(16,30,51,0.045); --glow:rgba(194,102,28,0.07); }
+
 *{box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;}
 body{
   margin:0;
-  background:var(--paper);
   color:var(--ink);
   font-family:"Plex Sans",system-ui,sans-serif;
   font-size:16px;
   line-height:1.65;
+  min-height:100vh;
+  background:linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%) fixed;
+}
+/* Soft accent glow anchored behind the hero */
+body::after{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:radial-gradient(900px 480px at 78% -6%, var(--glow), transparent 62%);
+}
+/* Blueprint grid as faint texture that fades out down the page (keeps text areas clean) */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
   background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size:var(--grid-size) var(--grid-size);
-  background-position:center top;
+  -webkit-mask-image:radial-gradient(130% 78% at 72% -4%, #000 26%, transparent 72%);
+          mask-image:radial-gradient(130% 78% at 72% -4%, #000 26%, transparent 72%);
 }
 @media (prefers-reduced-motion:reduce){
   body{transition:none;}
